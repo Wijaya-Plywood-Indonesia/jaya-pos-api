@@ -38,8 +38,14 @@ class User extends Authenticatable implements FilamentUser
             return false;
         }
 
-        // Super admin (tanpa cafe) boleh masuk; user cafe hanya owner dan manager
-        return $this->cafe_id === null || $this->hasAnyRole(['owner', 'manager']);
+        // Super admin (tanpa cafe) boleh masuk
+        if ($this->cafe_id === null) {
+            return true;
+        }
+
+        // User cafe: cafe-nya harus aktif, dan role-nya owner atau manager
+        return (bool) $this->cafe?->is_active
+            && $this->hasAnyRole(['owner', 'manager']);
     }
 
     public function cafe(): BelongsTo
