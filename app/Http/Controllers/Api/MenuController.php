@@ -36,18 +36,24 @@ class MenuController extends Controller
                 ])->values(),
             ]);
 
-        $products = Product::with('optionGroups:id')
+        $products = Product::with(['optionGroups:id', 'media'])
             ->where('cafe_id', $cafeId)
             ->orderBy('sort_order')
             ->get()
-            ->map(fn ($p) => [
-                'id' => $p->id,
-                'name' => $p->name,
-                'category_id' => $p->category_id,
-                'price' => $p->price,
-                'is_available' => $p->is_available,
-                'option_group_ids' => $p->optionGroups->pluck('id')->values(),
-            ]);
+            ->map(function ($p) {
+                $url = $p->getFirstMediaUrl('photo', 'thumb');
+
+                return [
+                    'id' => $p->id,
+                    'name' => $p->name,
+                    'category_id' => $p->category_id,
+                    'price' => $p->price,
+                    'is_available' => $p->is_available,
+                    // Path relatif, contoh /storage/12/thumb.jpg. Aplikasi menambahkan alamat servernya sendiri.
+                    'image_path' => $url ? parse_url($url, PHP_URL_PATH) : null,
+                    'option_group_ids' => $p->optionGroups->pluck('id')->values(),
+                ];
+            });
 
         $tables = DiningTable::where('cafe_id', $cafeId)
             ->orderBy('name')

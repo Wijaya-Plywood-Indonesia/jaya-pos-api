@@ -1,0 +1,123 @@
+/* Tampilan admin Jaya POS, mengikuti Jaya_Cafe_Admin.html.
+   Catatan: nama kelas .fi-* milik Filament; bila ada yang tidak kena, cek lewat
+   Inspect Element di browser lalu sesuaikan selector-nya. */
+
+:root {
+    --jaya-ac: #d7263d;
+    --jaya-ac2: #14b8a6;
+    --jaya-side: #16191f;
+    --jaya-line: #e3e5ea;
+    --jaya-chip-bg: #ffffff;
+    --jaya-chip-fg: #111827;
+    --jaya-mu: #6b7280;
+}
+
+/* Mode gelap: semua warna yang tadinya terang dibuat ikut gelap */
+html.dark {
+    --jaya-line: rgba(255, 255, 255, .10);
+    --jaya-chip-bg: #1b1e25;
+    --jaya-chip-fg: #e5e7eb;
+    --jaya-mu: #9ca3af;
+}
+
+/* ---------- Latar halaman ---------- */
+html:not(.dark) .fi-body { background: #f4f5f7; }
+
+/* ---------- Sidebar gelap ---------- */
+.fi-sidebar,
+.fi-sidebar-header,
+.fi-sidebar-nav {
+    background: var(--jaya-side) !important;
+    --tw-ring-color: transparent;
+}
+.fi-sidebar-header { box-shadow: none !important; border: 0 !important; }
+.fi-sidebar-group-label {
+    color: #8b93a1 !important;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+.fi-sidebar-item-btn { border-radius: 10px !important; }
+.fi-sidebar-item-btn:hover { background: #232833 !important; }
+.fi-sidebar-item-label,
+.fi-sidebar-item-icon { color: #cbd2dc !important; font-weight: 600; }
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn { background: var(--jaya-ac) !important; }
+.fi-sidebar-item.fi-active .fi-sidebar-item-label,
+.fi-sidebar-item.fi-active .fi-sidebar-item-icon { color: #fff !important; }
+
+/* Logo + nama cafe (di top bar, jadi warna teks mengikuti mode) */
+.jaya-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; }
+.jaya-brand-name { color: #111827; }
+html.dark .jaya-brand-name { color: #fff; }
+.jaya-logo {
+    width: 34px; height: 34px; border-radius: 10px;
+    display: grid; place-items: center;
+    color: #fff; font-weight: 800;
+}
+
+/* ---------- Kartu, tabel, badge ---------- */
+.fi-section,
+.fi-ta-ctn {
+    border-radius: 14px !important;
+    border: 1px solid var(--jaya-line);
+    box-shadow: none !important;
+}
+.fi-header-heading { font-weight: 800; letter-spacing: -.01em; }
+.fi-ta-header-cell-label { font-size: 12px; color: var(--jaya-mu); font-weight: 600; }
+.fi-ta-row { cursor: pointer; }
+.fi-badge { border-radius: 999px !important; font-weight: 700; }
+.fi-btn { border-radius: 10px !important; font-weight: 700; }
+.fi-input-wrp { border-radius: 10px !important; }
+
+/* Tab kategori tampil seperti chip */
+.fi-tabs { background: transparent !important; box-shadow: none !important; gap: 8px; padding: 0 !important; }
+.fi-tabs-item {
+    border: 1px solid var(--jaya-line);
+    border-radius: 999px !important;
+    padding: 6px 12px !important;
+    font-weight: 600;
+    background: var(--jaya-chip-bg);
+}
+.fi-tabs-item .fi-tabs-item-label { color: var(--jaya-chip-fg); }
+.fi-tabs-item.fi-active { background: var(--jaya-ac2) !important; border-color: var(--jaya-ac2); }
+.fi-tabs-item.fi-active .fi-tabs-item-label { color: #06312c !important; }
+
+/* ---------- Halaman kustom (Pengaturan Cafe, Resep & Bahan) ---------- */
+.jaya-grid { display: grid; grid-template-columns: 1fr 340px; gap: 16px; align-items: start; }
+@media (max-width: 860px) { .jaya-grid { grid-template-columns: 1fr; } }
+
+.jaya-card {
+    background: #fff;
+    border: 1px solid var(--jaya-line);
+    border-radius: 14px;
+    padding: 16px;
+}
+html.dark .jaya-card { background: #1b1e25; }
+
+.jaya-stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.jaya-stats .jaya-card { flex: 1; min-width: 140px; }
+.jaya-stats b { display: block; font-size: 20px; }
+.jaya-mu { color: var(--jaya-mu); font-size: 13px; }
+
+.jaya-table { width: 100%; border-collapse: collapse; }
+.jaya-table th {
+    font-size: 12px; text-align: left; color: var(--jaya-mu);
+    font-weight: 600; padding: 8px 10px; border-bottom: 1px solid var(--jaya-line);
+}
+.jaya-table td { padding: 11px 10px; border-bottom: 1px solid var(--jaya-line); vertical-align: middle; }
+.jaya-table .m { font-weight: 700; }
+.jaya-addrow { display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap; margin-top: 14px; }
+.jaya-addrow > * { min-width: 160px; }
+.jaya-tw { overflow-x: auto; }
+
+/* Pratinjau struk (sengaja selalu putih, seperti kertas struk) */
+.jaya-receipt {
+    background: #fff; color: #111;
+    font-family: "Courier New", monospace; font-size: 12px;
+    padding: 16px; border-radius: 8px; border: 1px solid #e3e5ea;
+    max-width: 300px; margin: 12px auto 0;
+}
+.jaya-receipt > div { display: flex; justify-content: space-between; }
+.jaya-receipt hr { border: 0; border-top: 1px dashed #888; margin: 8px 0; }
+.jaya-receipt .c { text-align: center; display: block; }
+.jaya-receipt .m { font-weight: 700; }

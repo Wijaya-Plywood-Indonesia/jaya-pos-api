@@ -8,6 +8,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
@@ -23,18 +24,37 @@ class ProductsTable
                     ->badge()
                     ->color('gray')
                     ->sortable()
-                    ->visible(fn () => ! auth()->user()?->cafe_id),
-                TextColumn::make('name')->label('Menu')->searchable()->sortable(),
-                TextColumn::make('category.name')->label('Kategori')->sortable()->badge(),
+                    ->visible(fn() => ! auth()->user()?->cafe_id),
+                // Kotak inisial seperti thumbnail di mockup
+                // Foto menu; bila belum ada foto, tampil inisial seperti sebelumnya
+                SpatieMediaLibraryImageColumn::make('photo')
+                    ->label('')
+                    ->collection('photo')
+                    ->conversion('thumb')
+                    ->imageSize(40)
+                    ->square(),
+                TextColumn::make('initial')
+                    ->label('')
+                    ->state(fn($record) => $record->hasMedia('photo')
+                        ? null
+                        : mb_strtoupper(mb_substr($record->name, 0, 1)))
+                    ->badge()
+                    ->color('success'),
+                TextColumn::make('name')->label('Nama')->searchable()->sortable()->weight('bold'),
+                TextColumn::make('category.name')->label('Kategori')->sortable(),
                 TextColumn::make('price')
                     ->label('Harga')
                     ->sortable()
-                    ->formatStateUsing(fn ($state) => 'Rp ' . number_format((int) $state, 0, ',', '.')),
-                TextColumn::make('optionGroups.name')->label('Opsi')->badge(),
+                    ->formatStateUsing(fn($state) => 'Rp ' . number_format((int) $state, 0, ',', '.')),
+                TextColumn::make('option_groups_count')
+                    ->label('Opsi')
+                    ->counts('optionGroups')
+                    ->formatStateUsing(fn($state) => $state . ' grup'),
                 // Ubah Tersedia/Habis langsung dari tabel
                 ToggleColumn::make('is_available')->label('Tersedia'),
             ])
             ->defaultSort('sort_order')
+            ->searchPlaceholder('Cari menu...')
             ->filters([
                 SelectFilter::make('category_id')
                     ->label('Kategori')

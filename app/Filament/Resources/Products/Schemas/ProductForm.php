@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Products\Schemas;
 
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
@@ -21,6 +22,15 @@ class ProductForm
                         ->relationship('cafe', 'name')
                         ->required()
                         ->visible(fn () => ! auth()->user()?->cafe_id)
+                        ->columnSpanFull(),
+                    SpatieMediaLibraryFileUpload::make('photo')
+                        ->label('Foto menu')
+                        ->collection('photo')
+                        ->conversion('thumb')
+                        ->image()
+                        ->imageEditor()
+                        ->maxSize(2048)
+                        ->helperText('JPG, PNG, atau WebP, maksimal 2 MB. Foto persegi paling bagus.')
                         ->columnSpanFull(),
                     TextInput::make('name')
                         ->label('Nama menu')
