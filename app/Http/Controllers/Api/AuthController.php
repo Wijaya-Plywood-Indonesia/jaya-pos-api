@@ -71,6 +71,50 @@ class AuthController extends Controller
         ]);
     }
 
+    // Data untuk login offline di tablet: daftar staf + hash PIN KASIR saja.
+    // PIN owner dan manajer tidak pernah dikirim keluar dari server.
+    public function offlineStaff(Request $request): JsonResponse
+    {
+        $me = $request->user()->load('cafe');
+
+        abort_unless($me->cafe_id && $me->cafe?->is_active, 403, 'Akun ini tidak terhubung ke cafe aktif.');
+
+        $users = User::with('roles')
+            ->where('cafe_id', $me->cafe_id)
+            ->where('is_active', true)
+            ->whereNotNull('pin')
+            ->orderBy('name')
+            ->get();
+
+        $staff = $users->map(fn (User $u) => [
+            'id' => $u->id,
+            'name' => $u->name,
+            'role' => $u->getRoleNames()->first(),
+            'outlet_id' => $u->outlet_id,
+        ])->values();
+
+        $pins = [];
+        foreach ($users as $u) {
+            // Hanya akun yang murni kasir
+            if (! $u->hasRole('cashier') || $u->hasAnyRole(['owner', 'manager', 'super_admin'])) {
+                continue;
+            }
+
+            $hash = $u->pin;
+
+            // Hanya hash bcrypt yang valid
+            if (is_string($hash) && preg_match('/^\$2[aby]\$/', $hash)) {
+                $pins[$u->id] = $hash;
+            }
+        }
+
+        return response()->json([
+            'generated_at' => now()->toIso8601String(),
+            'staff' => $staff,
+            'pins' => (object) $pins,
+        ]);
+    }
+
     public function me(Request $request): JsonResponse
     {
         $user = $request->user()->load('roles', 'cafe');

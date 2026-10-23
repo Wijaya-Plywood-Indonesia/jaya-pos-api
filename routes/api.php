@@ -12,6 +12,7 @@ Route::prefix('v1')->group(function () {
     // Butuh token
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
+        Route::get('/auth/offline-staff', [AuthController::class, 'offlineStaff']);
         Route::post('auth/logout', [AuthController::class, 'logout']);
         Route::get('menu', [MenuController::class, 'index']);
     });
