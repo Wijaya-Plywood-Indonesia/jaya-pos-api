@@ -43,7 +43,7 @@ class AuthController extends Controller
         $data = $request->validate([
             'cafe' => ['required', 'string'],
             'user_id' => ['required', 'integer'],
-            'pin' => ['required', 'string', 'digits_between:4,6'],
+            'pin' => ['required', 'string', 'digits:4'],
             'device_name' => ['required', 'string', 'max:60'],
         ]);
 

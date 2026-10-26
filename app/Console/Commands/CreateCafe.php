@@ -51,9 +51,9 @@ class CreateCafe extends Command
             return self::FAILURE;
         }
 
-        $pin = (string) $this->secret('PIN owner untuk aplikasi (4-6 angka)');
-        if (! preg_match('/^\d{4,6}$/', $pin)) {
-            $this->error('PIN harus 4 sampai 6 angka.');
+        $pin = (string) $this->secret('PIN owner untuk aplikasi (4 angka)');
+        if (! preg_match('/^\d{4}$/', $pin)) {
+            $this->error('PIN harus 4 angka.');
 
             return self::FAILURE;
         }

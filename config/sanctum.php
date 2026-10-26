@@ -48,9 +48,12 @@ return [
     | considered expired. This will override any values set in the token's
     | "expires_at" attribute, but first-party sessions are not affected.
     |
+    | Bawaan 30 hari (43200 menit). Aplikasi kasir menangani token kedaluwarsa
+    | dengan kembali ke layar pilih akun, dan kasir tetap bisa masuk offline.
+    |
     */
 
-    'expiration' => null,
+    'expiration' => (int) env('SANCTUM_EXPIRATION', 43200),
 
     /*
     |--------------------------------------------------------------------------

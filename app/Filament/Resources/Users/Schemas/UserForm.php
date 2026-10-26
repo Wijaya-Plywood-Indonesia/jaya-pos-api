@@ -45,12 +45,13 @@ class UserForm
                         ->dehydrated(fn ($state) => filled($state))
                         ->minLength(8),
                     TextInput::make('pin')
-                        ->label('PIN kasir (4-6 angka)')
+                        ->label('PIN kasir (4 angka)')
                         ->password()
                         ->revealable()
-                        ->numeric()
-                        ->minLength(4)
-                        ->maxLength(6)
+                        ->inputMode('numeric')
+                        ->maxLength(4)
+                        ->regex('/^\d{4}$/')
+                        ->validationMessages(['regex' => 'PIN harus 4 angka.'])
                         ->dehydrated(fn ($state) => filled($state))
                         ->helperText('Kosongkan saat edit jika tidak ingin mengganti PIN.'),
                     Select::make('outlet_id')

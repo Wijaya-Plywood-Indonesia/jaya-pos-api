@@ -88,11 +88,14 @@ class CafeForm
                         ->required()
                         ->minLength(8),
                     TextInput::make('owner_pin')
-                        ->label('PIN aplikasi kasir (4-6 angka)')
+                        ->label('PIN aplikasi kasir (4 angka)')
                         ->password()
                         ->revealable()
                         ->required()
-                        ->regex('/^\d{4,6}$/'),
+                        ->inputMode('numeric')
+                        ->maxLength(4)
+                        ->regex('/^\d{4}$/')
+                        ->validationMessages(['regex' => 'PIN harus 4 angka.']),
                 ]),
         ]);
     }
