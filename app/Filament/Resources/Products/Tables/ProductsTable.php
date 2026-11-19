@@ -30,9 +30,8 @@ class ProductsTable
                 SpatieMediaLibraryImageColumn::make('photo')
                     ->label('')
                     ->collection('photo')
-                    ->conversion('thumb')
-                    ->imageSize(40)
-                    ->square(),
+                    ->disk('public')
+                    ->conversion('thumb'),
                 TextColumn::make('initial')
                     ->label('')
                     ->state(fn($record) => $record->hasMedia('photo')
