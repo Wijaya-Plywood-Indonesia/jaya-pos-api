@@ -33,7 +33,7 @@ class ProductsTable
                     ->disk('public')
                     ->conversion('thumb'),
                 TextColumn::make('initial')
-                    ->label('')
+                       ->label('')
                     ->state(fn($record) => $record->hasMedia('photo')
                         ? null
                         : mb_strtoupper(mb_substr($record->name, 0, 1)))

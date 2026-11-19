@@ -70,6 +70,21 @@ class OrderResource extends Resource
                         'refunded' => 'warning',
                         default => 'gray',
                     }),
+                TextColumn::make('kitchen_status')
+                    ->label('Antrian')
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state) => [
+                        'new' => 'Baru',
+                        'preparing' => 'Diproses',
+                        'ready' => 'Siap diambil',
+                        'served' => 'Selesai',
+                    ][$state] ?? $state)
+                    ->color(fn (?string $state) => match ($state) {
+                        'new' => 'warning',
+                        'ready' => 'info',
+                        'served' => 'success',
+                        default => 'gray',
+                    }),
             ])
             ->defaultSort('ordered_at', 'desc')
             ->filters([

@@ -40,6 +40,7 @@ class OrderController extends Controller
             'dining_table_id' => ['nullable', 'integer'],
             'customer_name' => ['nullable', 'string', 'max:255'],
             'status' => ['required', Rule::in(['paid'])],
+            'kitchen_status' => ['nullable', Rule::in(['new', 'preparing', 'ready', 'served'])],
 
             'subtotal' => ['required', 'integer', 'min:0'],
             'discount_total' => ['required', 'integer', 'min:0'],
@@ -132,6 +133,7 @@ class OrderController extends Controller
                     'order_number' => $number,
                     'type' => $data['type'],
                     'status' => 'paid',
+                    'kitchen_status' => $data['kitchen_status'] ?? 'new',
                     'customer_name' => $data['customer_name'] ?? null,
                     'subtotal' => $data['subtotal'],
                     'discount_total' => $data['discount_total'],
@@ -189,6 +191,33 @@ class OrderController extends Controller
             'id' => $order->id,
             'order_number' => $order->order_number,
         ], 201);
+    }
+
+    // Mengubah status antrian (Baru -> Siap diambil -> Selesai) dari tablet kasir.
+    // Idempoten dan hanya maju: kiriman ulang atau yang datang terlambat tidak menurunkan status.
+    public function kitchenStatus(Request $request, string $id): JsonResponse
+    {
+        $cafeId = $this->cafeIdOrFail($request);
+
+        $data = $request->validate([
+            'status' => ['required', Rule::in(['new', 'preparing', 'ready', 'served'])],
+        ]);
+
+        $order = Order::withoutGlobalScopes()->where('cafe_id', $cafeId)->where('id', $id)->first();
+        if (! $order) {
+            return response()->json(['message' => 'Transaksi tidak ditemukan.', 'code' => 'order_missing'], 404);
+        }
+
+        $rank = ['new' => 0, 'preparing' => 1, 'ready' => 2, 'served' => 3];
+        if ($rank[$data['status']] > ($rank[$order->kitchen_status] ?? 0)) {
+            $order->update(['kitchen_status' => $data['status']]);
+        }
+
+        return response()->json([
+            'status' => 'ok',
+            'id' => $order->id,
+            'kitchen_status' => $order->kitchen_status,
+        ]);
     }
 
     private function alreadyReceived(Order $order, int $cafeId): JsonResponse

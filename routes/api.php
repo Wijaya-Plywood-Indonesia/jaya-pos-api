@@ -21,5 +21,8 @@ Route::prefix('v1')->group(function () {
         Route::get('menu', [MenuController::class, 'index']);
         Route::post('shifts', [ShiftController::class, 'upsert'])->middleware('throttle:300,1');
         Route::post('orders', [OrderController::class, 'store'])->middleware('throttle:300,1');
+        Route::post('orders/{id}/kitchen-status', [OrderController::class, 'kitchenStatus'])
+            ->whereUuid('id')
+            ->middleware('throttle:300,1');
     });
 });
