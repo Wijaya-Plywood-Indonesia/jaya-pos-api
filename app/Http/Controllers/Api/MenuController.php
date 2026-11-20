@@ -56,8 +56,10 @@ class MenuController extends Controller
             });
 
         $tables = DiningTable::where('cafe_id', $cafeId)
-            ->orderBy('name')
-            ->get(['id', 'name', 'capacity']);
+            ->get(['id', 'name', 'capacity'])
+            // Urutan natural: Meja 2 sebelum Meja 10
+            ->sortBy('name', SORT_NATURAL | SORT_FLAG_CASE)
+            ->values();
 
         return response()->json([
             'generated_at' => now()->toIso8601String(),
