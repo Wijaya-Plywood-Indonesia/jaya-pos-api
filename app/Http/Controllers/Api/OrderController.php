@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Api\Concerns\ReadsDeviceData;
 use App\Http\Controllers\Controller;
 use App\Models\DiningTable;
+use App\Models\Discount;
 use App\Models\Option;
 use App\Models\OptionGroup;
 use App\Models\Order;
@@ -41,6 +42,9 @@ class OrderController extends Controller
             'customer_name' => ['nullable', 'string', 'max:255'],
             'status' => ['required', Rule::in(['paid'])],
             'kitchen_status' => ['nullable', Rule::in(['new', 'preparing', 'ready', 'served'])],
+            'discount_id' => ['nullable', 'integer'],
+            'discount_name' => ['nullable', 'string', 'max:120'],
+            'approved_by' => ['nullable', 'integer'],
 
             'subtotal' => ['required', 'integer', 'min:0'],
             'discount_total' => ['required', 'integer', 'min:0'],
@@ -130,6 +134,11 @@ class OrderController extends Controller
                     'shift_id' => $shiftId,
                     'cashier_id' => $this->ownedId(User::class, $data['cashier_id'] ?? null, $cafeId) ?? $request->user()->id,
                     'dining_table_id' => $this->ownedId(DiningTable::class, $data['dining_table_id'] ?? null, $cafeId),
+                    // Promo yang sudah dihapus di server tidak boleh menggagalkan transaksi yang sudah dibayar
+                    'discount_id' => $this->ownedId(Discount::class, $data['discount_id'] ?? null, $cafeId),
+                    'discount_name' => $data['discount_name'] ?? null,
+                    // Owner atau manajer yang menyetujui diskon manual
+                    'approved_by' => $this->ownedId(User::class, $data['approved_by'] ?? null, $cafeId),
                     'order_number' => $number,
                     'type' => $data['type'],
                     'status' => 'paid',

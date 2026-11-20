@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 
 class AuthController extends Controller
 {
@@ -113,6 +114,54 @@ class AuthController extends Controller
             'staff' => $staff,
             'pins' => (object) $pins,
         ]);
+    }
+
+    // Memeriksa PIN owner atau manajer untuk menyetujui tindakan kasir (misalnya diskon manual).
+    // PIN owner tidak pernah dikirim ke tablet, jadi pemeriksaannya hanya bisa dilakukan di sini.
+    public function verifyApprover(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'pin' => ['required', 'string', 'digits:4'],
+        ]);
+
+        $me = $request->user();
+        $key = 'approver-pin:' . $me->id;
+
+        // PIN hanya 4 angka, jadi percobaan dibatasi: 5 kali salah, lalu dikunci 5 menit
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            $secs = RateLimiter::availableIn($key);
+
+            return response()->json(
+                ['message' => 'Terlalu banyak percobaan. Coba lagi dalam ' . $secs . ' detik.'],
+                429,
+                ['Retry-After' => $secs],
+            );
+        }
+
+        $approvers = User::with('roles')
+            ->where('cafe_id', $me->cafe_id)
+            ->where('is_active', true)
+            ->whereNotNull('pin')
+            ->get()
+            ->filter(fn (User $u) => $u->hasAnyRole(['owner', 'manager']));
+
+        foreach ($approvers as $u) {
+            if (Hash::check($data['pin'], $u->pin)) {
+                RateLimiter::clear($key);
+
+                return response()->json([
+                    'approver' => [
+                        'id' => $u->id,
+                        'name' => $u->name,
+                        'role' => $u->getRoleNames()->first(),
+                    ],
+                ]);
+            }
+        }
+
+        RateLimiter::hit($key, 300);
+
+        return response()->json(['message' => 'PIN owner salah.'], 422);
     }
 
     public function me(Request $request): JsonResponse

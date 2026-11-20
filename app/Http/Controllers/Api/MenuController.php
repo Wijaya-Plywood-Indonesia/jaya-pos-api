@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Discount;
 use App\Models\DiningTable;
 use App\Models\OptionGroup;
 use App\Models\Product;
@@ -61,12 +62,32 @@ class MenuController extends Controller
             ->sortBy('name', SORT_NATURAL | SORT_FLAG_CASE)
             ->values();
 
+        // Promo dan voucher yang aktif. Kode voucher ikut dikirim supaya tablet bisa
+        // memeriksanya saat offline, tapi tidak pernah ditampilkan di layar kasir.
+        $discounts = Discount::where('cafe_id', $cafeId)
+            ->activeNow()
+            ->orderBy('name')
+            ->get()
+            ->map(fn ($d) => [
+                'id' => $d->id,
+                'name' => $d->name,
+                'code' => $d->code,
+                'type' => $d->type,
+                'value' => $d->value,
+                'min_purchase' => $d->min_purchase,
+                'max_discount' => $d->max_discount,
+                'starts_at' => $d->starts_at?->toIso8601String(),
+                'ends_at' => $d->ends_at?->toIso8601String(),
+            ])
+            ->values();
+
         return response()->json([
             'generated_at' => now()->toIso8601String(),
             'categories' => $categories,
             'option_groups' => $groups,
             'products' => $products,
             'tables' => $tables,
+            'discounts' => $discounts,
         ]);
     }
 }

@@ -18,6 +18,7 @@ Route::prefix('v1')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
         Route::get('/auth/offline-staff', [AuthController::class, 'offlineStaff']);
         Route::post('auth/logout', [AuthController::class, 'logout']);
+        Route::post('auth/verify-approver', [AuthController::class, 'verifyApprover']);
         Route::get('menu', [MenuController::class, 'index']);
         Route::post('shifts', [ShiftController::class, 'upsert'])->middleware('throttle:300,1');
         Route::post('orders', [OrderController::class, 'store'])->middleware('throttle:300,1');
