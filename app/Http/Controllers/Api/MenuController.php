@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Discount;
 use App\Models\DiningTable;
+use App\Models\Ingredient;
 use App\Models\OptionGroup;
 use App\Models\Product;
+use App\Models\Recipe;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -37,12 +39,38 @@ class MenuController extends Controller
                 ])->values(),
             ]);
 
-        $products = Product::with(['optionGroups:id', 'media'])
+        // Owner dan manajer boleh melihat resep dan HPP. Kasir hanya melihat sisa porsi.
+        $canSeeCost = $request->user()->hasAnyRole(['owner', 'manager']);
+
+        $productRows = Product::with(['optionGroups:id', 'media'])
             ->where('cafe_id', $cafeId)
             ->orderBy('sort_order')
+            ->get();
+
+        $recipes = Recipe::whereIn('product_id', $productRows->pluck('id'))
+            ->with('ingredient')
             ->get()
-            ->map(function ($p) {
+            ->groupBy('product_id');
+
+        $products = $productRows
+            ->map(function ($p) use ($recipes, $canSeeCost) {
                 $url = $p->getFirstMediaUrl('photo', 'thumb');
+
+                $lines = $recipes->get($p->id, collect())
+                    ->filter(fn ($r) => $r->ingredient && ! $r->ingredient->trashed() && $r->quantity > 0);
+
+                // Sisa porsi dari bahan yang paling cepat habis. null = menu tanpa resep (tanpa batas).
+                $portions = $lines->isEmpty()
+                    ? null
+                    : (int) max(0, floor($lines->map(fn ($r) => $r->ingredient->current_stock / $r->quantity)->min() + 1e-9));
+
+                $extra = $canSeeCost ? [
+                    'hpp' => (int) round($lines->sum(fn ($r) => $r->quantity * $r->ingredient->cost_per_unit)),
+                    'recipe' => $lines->map(fn ($r) => [
+                        'ingredient_id' => $r->ingredient_id,
+                        'quantity' => $r->quantity,
+                    ])->values(),
+                ] : [];
 
                 return [
                     'id' => $p->id,
@@ -53,8 +81,23 @@ class MenuController extends Controller
                     // Path relatif, contoh /storage/12/thumb.jpg. Aplikasi menambahkan alamat servernya sendiri.
                     'image_path' => $url ? parse_url($url, PHP_URL_PATH) : null,
                     'option_group_ids' => $p->optionGroups->pluck('id')->values(),
-                ];
-            });
+                    'portions' => $portions,
+                ] + $extra;
+            })
+            ->values();
+
+        $ingredients = Ingredient::where('cafe_id', $cafeId)
+            ->orderBy('name')
+            ->get()
+            ->map(fn ($i) => [
+                'id' => $i->id,
+                'name' => $i->name,
+                'unit' => $i->unit,
+                'stock' => $i->current_stock,
+                'min_stock' => $i->min_stock,
+                'is_sweetener' => $i->is_sweetener,
+            ] + ($canSeeCost ? ['cost_per_unit' => $i->cost_per_unit] : []))
+            ->values();
 
         $tables = DiningTable::where('cafe_id', $cafeId)
             ->get(['id', 'name', 'capacity'])
@@ -88,6 +131,7 @@ class MenuController extends Controller
             'products' => $products,
             'tables' => $tables,
             'discounts' => $discounts,
+            'ingredients' => $ingredients,
         ]);
     }
 }

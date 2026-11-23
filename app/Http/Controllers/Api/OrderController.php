@@ -13,6 +13,7 @@ use App\Models\Outlet;
 use App\Models\Product;
 use App\Models\Shift;
 use App\Models\User;
+use App\Services\StockService;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -182,6 +183,10 @@ class OrderController extends Controller
                     'change_amount' => $pay['change_amount'] ?? 0,
                     'paid_at' => $paidAt,
                 ]);
+
+                // Stok bahan berkurang otomatis menurut resep. Satu transaksi hanya sekali
+                // (kiriman ulang berhenti lebih awal di pemeriksaan "sudah diterima").
+                app(StockService::class)->deductForOrder($order);
 
                 return $order;
             });

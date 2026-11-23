@@ -9,7 +9,12 @@ class Option extends Model
 {
     protected $guarded = [];
 
-    protected $casts = ['extra_price' => 'integer'];
+    protected $casts = [
+        'extra_price' => 'integer',
+        'stock_multiplier' => 'float',
+        'sweet_multiplier' => 'float',
+        'extra_ingredients' => 'array',
+    ];
 
     public function group(): BelongsTo
     {

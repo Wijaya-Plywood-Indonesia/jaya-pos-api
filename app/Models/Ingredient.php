@@ -17,6 +17,7 @@ class Ingredient extends Model
         'cost_per_unit' => 'float',
         'min_stock' => 'float',
         'current_stock' => 'float',
+        'is_sweetener' => 'boolean',
     ];
 
     public function recipes(): HasMany

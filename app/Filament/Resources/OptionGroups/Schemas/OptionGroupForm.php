@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\OptionGroups\Schemas;
 
+use App\Models\Ingredient;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -54,6 +55,47 @@ class OptionGroupForm
                                 ->minValue(0)
                                 ->default(0)
                                 ->prefix('Rp'),
+                            Section::make('Pengaruh ke stok bahan')
+                                ->description('Opsional. Atur bila pilihan ini mengubah pemakaian bahan, misalnya Large, Less Sugar, atau tambahan extra shot.')
+                                ->collapsed()
+                                ->columns(2)
+                                ->columnSpanFull()
+                                ->schema([
+                                    TextInput::make('stock_multiplier')
+                                        ->label('Pengali semua bahan resep')
+                                        ->numeric()
+                                        ->required()
+                                        ->default(1)
+                                        ->minValue(0)
+                                        ->step(0.01)
+                                        ->helperText('Large = 1.3 (30% lebih banyak). Normal = 1.'),
+                                    TextInput::make('sweet_multiplier')
+                                        ->label('Pengali bahan pemanis')
+                                        ->numeric()
+                                        ->required()
+                                        ->default(1)
+                                        ->minValue(0)
+                                        ->step(0.01)
+                                        ->helperText('Less Sugar = 0.5. No Sugar = 0. Normal = 1.'),
+                                    Repeater::make('extra_ingredients')
+                                        ->label('Bahan tambahan yang ikut terpakai')
+                                        ->addActionLabel('+ Bahan')
+                                        ->defaultItems(0)
+                                        ->columns(2)
+                                        ->columnSpanFull()
+                                        ->schema([
+                                            Select::make('ingredient_id')
+                                                ->label('Bahan')
+                                                ->options(fn () => Ingredient::query()->orderBy('name')->pluck('name', 'id'))
+                                                ->searchable()
+                                                ->required(),
+                                            TextInput::make('quantity')
+                                                ->label('Jumlah per porsi')
+                                                ->numeric()
+                                                ->minValue(0.001)
+                                                ->required(),
+                                        ]),
+                                ]),
                         ]),
                 ]),
         ]);
