@@ -51,6 +51,14 @@ class AdminPanelProvider extends PanelProvider
                     . '?v=' . @filemtime(public_path('css/jaya-admin.css')) . '">'
                 )
             )
+            // Tautan pendaftaran di bawah formulir masuk
+            ->renderHook(
+                PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
+                fn () => new HtmlString(
+                    '<p style="text-align:center;margin-top:14px;font-size:14px">Belum punya akun? '
+                    . '<a href="' . e(url('/daftar')) . '" style="color:#d7263d;font-weight:700">Daftar gratis</a></p>'
+                )
+            )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')

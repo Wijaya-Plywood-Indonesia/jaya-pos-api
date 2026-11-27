@@ -9,4 +9,10 @@ return [
     */
     'report_timezone' => env('REPORT_TIMEZONE', 'Asia/Jakarta'),
 
+    /*
+    | Alamat email untuk pertanyaan pengguna dan permintaan hapus data.
+    | Tampil di halaman Syarat dan Kebijakan Privasi. Isi JAYA_CONTACT_EMAIL di .env.
+    */
+    'contact_email' => env('JAYA_CONTACT_EMAIL', 'admin@example.com'),
+
 ];
