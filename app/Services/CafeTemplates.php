@@ -11,6 +11,8 @@ use App\Models\Product;
 use App\Models\Recipe;
 use App\Models\StockMovement;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * Template usaha untuk cafe baru: kategori, menu, opsi, bahan, dan resep contoh.
@@ -168,6 +170,8 @@ class CafeTemplates
                 $product->optionGroups()->attach(array_map(fn ($g) => $groups[$g], $groupNames));
             }
 
+            self::attachSamplePhoto($product);
+
             foreach ($recipe as $ingredientName => $quantity) {
                 Recipe::create([
                     'product_id' => $product->id,
@@ -175,6 +179,25 @@ class CafeTemplates
                     'quantity' => $quantity,
                 ]);
             }
+        }
+    }
+
+    /** Pasang foto contoh dari resources/sample-images/{nama-menu}.jpg (dilewati kalau file tidak ada). */
+    private static function attachSamplePhoto(Product $product): void
+    {
+        $path = resource_path('sample-images/'.Str::slug($product->name).'.jpg');
+
+        if (! is_file($path)) {
+            return;
+        }
+
+        try {
+            $product->addMedia($path)
+                ->preservingOriginal()
+                ->toMediaCollection('photo');
+        } catch (\Throwable $e) {
+            // Foto hanya pemanis; gagal pasang foto tidak boleh menggagalkan pendaftaran cafe
+            report($e);
         }
     }
 
@@ -202,6 +225,14 @@ class CafeTemplates
                 ->all();
 
             if ($productIds) {
+                // Hapus foto (file + baris media) lebih dulu supaya tidak jadi sampah di storage
+                Media::query()
+                    ->where('model_type', (new Product)->getMorphClass())
+                    ->whereIn('model_id', $productIds)
+                    ->get()
+                    ->each
+                    ->delete();
+
                 DB::table('recipes')->whereIn('product_id', $productIds)->delete();
                 DB::table('option_group_product')->whereIn('product_id', $productIds)->delete();
                 DB::table('products')->whereIn('id', $productIds)->delete();
