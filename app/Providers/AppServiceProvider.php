@@ -34,5 +34,13 @@ class AppServiceProvider extends ServiceProvider
                 Limit::perHour(60)->by($cafe . '|' . $user),
             ];
         });
+
+        // Tebak-tebak kode aktivasi: dibatasi per IP
+        RateLimiter::for('device-activate', function (Request $request) {
+            return [
+                Limit::perMinute(8)->by($request->ip()),
+                Limit::perHour(40)->by($request->ip()),
+            ];
+        });
     }
 }

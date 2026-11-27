@@ -3,8 +3,6 @@
         $steps = $this->steps();
         $left = count(array_filter($steps, fn ($s) => ! $s['done']));
         $samples = $this->sampleCount();
-        $cafeCode = $this->cafeCode();
-        $serverUrl = $this->serverUrl();
     @endphp
 
     <style>
@@ -51,19 +49,10 @@
 
     <div class="mb-card">
         <h3>Untuk mengaktifkan tablet</h3>
-
-        <div class="mb-kv">
-            <small>Alamat server</small>
-            <code>{{ $serverUrl }}</code>
-            <button type="button" class="mb-copy" onclick="navigator.clipboard.writeText(@js($serverUrl))">Salin</button>
-        </div>
-        <div class="mb-kv">
-            <small>Kode cafe</small>
-            <code>{{ $cafeCode }}</code>
-            <button type="button" class="mb-copy" onclick="navigator.clipboard.writeText(@js($cafeCode))">Salin</button>
-        </div>
-
-        <div class="mb-note">Kalau tablet dan komputer ini satu Wi-Fi, ganti "localhost" di alamat server dengan alamat IP komputer (misalnya http://192.168.1.10:8000).</div>
+        <p style="font-size:13.5px; opacity:.8; margin:0 0 12px">
+            Tablet cukup diaktifkan dengan kode singkat sekali pakai, tanpa mengetik alamat server.
+        </p>
+        <a class="mb-go" href="{{ \App\Filament\Pages\Perangkat::getUrl() }}">Buat kode aktivasi</a>
     </div>
 
     @if ($samples > 0)

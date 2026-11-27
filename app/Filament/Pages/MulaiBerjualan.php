@@ -116,10 +116,10 @@ class MulaiBerjualan extends Page
             ],
             [
                 'title' => 'Aktifkan tablet kasir',
-                'hint' => 'Di tablet, buka aplikasi lalu isi alamat server dan kode cafe (ada di kotak di bawah). Pilih akunmu dan masukkan PIN.',
+                'hint' => 'Buat kode aktivasi di menu Perangkat, lalu masukkan kodenya di aplikasi kasir. Pilih akunmu dan masukkan PIN.',
                 'done' => $tabletDone,
-                'url' => null,
-                'cta' => null,
+                'url' => Perangkat::getUrl(),
+                'cta' => 'Buat kode',
             ],
             [
                 'title' => 'Coba satu transaksi',

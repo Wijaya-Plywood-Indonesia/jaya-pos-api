@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DeviceController;
 use App\Http\Controllers\Api\MenuController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\OrderController;
@@ -14,6 +15,9 @@ Route::prefix('v1')->group(function () {
     // per cafe + akun + IP, dan per akun per jam.
     Route::get('cafes/{slug}/staff', [AuthController::class, 'staff']);
     Route::post('auth/pin-login', [AuthController::class, 'pinLogin'])->middleware('throttle:pin-login');
+
+    // Aktivasi tablet dengan kode sekali pakai (batas percobaan per IP di AppServiceProvider)
+    Route::post('devices/activate', [DeviceController::class, 'activate'])->middleware('throttle:device-activate');
 
     // Butuh token
     Route::middleware('auth:sanctum')->group(function () {
