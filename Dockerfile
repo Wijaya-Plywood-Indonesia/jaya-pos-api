@@ -7,7 +7,7 @@ COPY . .
 RUN composer dump-autoload --optimize --no-dev --no-scripts --ignore-platform-reqs
 
 # ---- Tahap 2: image akhir (Nginx + PHP-FPM dalam satu container) ----
-FROM serversideup/php:8.3-fpm-nginx
+FROM serversideup/php:8.4-fpm-nginx
 
 USER root
 # intl: Filament | gd + exif: konversi foto menu (Spatie Media Library)
