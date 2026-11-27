@@ -15,4 +15,10 @@ return [
     */
     'contact_email' => env('JAYA_CONTACT_EMAIL', 'admin@example.com'),
 
+    /*
+    | Nomor WhatsApp untuk pertanyaan calon pelanggan, format internasional tanpa + atau spasi,
+    | contoh 6281234567890. Kosongkan bila tidak ingin menampilkan tombol WhatsApp.
+    */
+    'whatsapp' => env('JAYA_WHATSAPP'),
+
 ];

@@ -4,6 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Jaya POS')</title>
+    <meta name="description" content="@yield('description', 'Aplikasi kasir cafe yang mudah: pesan, bayar, cetak struk, stok otomatis, dan laporan. Tetap jalan saat internet putus.')">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="@yield('title', 'Jaya POS')">
+    <meta property="og:description" content="@yield('description', 'Aplikasi kasir cafe yang mudah: pesan, bayar, cetak struk, stok otomatis, dan laporan. Tetap jalan saat internet putus.')">
+    <meta name="theme-color" content="#d7263d">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23d7263d'/%3E%3Ctext x='32' y='45' font-size='38' font-weight='800' text-anchor='middle' fill='white' font-family='Arial'%3EJ%3C/text%3E%3C/svg%3E">
     <style>
         :root {
             --red: #d7263d; --red-d: #b91c32;
@@ -39,6 +45,9 @@
 
     <footer>
         <a href="/syarat">Syarat layanan</a>·<a href="/privasi">Kebijakan privasi</a>
+        @php($contact = config('jaya.contact_email'))
+        @if ($contact)·<a href="mailto:{{ $contact }}">{{ $contact }}</a>@endif
+        <div style="margin-top:8px">© {{ date('Y') }} Jaya POS</div>
     </footer>
 </body>
 </html>
