@@ -5,10 +5,13 @@ services:
     build: .
     restart: unless-stopped
     env_file: .env
+    mem_limit: 320m
+    environment:
+      # Hemat memori: worker PHP dibuat hanya saat ada permintaan
+      PHP_FPM_PM_CONTROL: ondemand
+      PHP_FPM_PM_MAX_CHILDREN: "5"
     ports:
-      # Default hanya bisa dibuka dari server itu sendiri (aman di belakang Nginx + HTTPS).
-      # Untuk tes lokal dari HP di Wi-Fi yang sama, isi APP_PORT_BIND=0.0.0.0 di .env
-      - "${APP_PORT_BIND:-127.0.0.1}:${APP_PORT:-8000}:8080"
+      - "${APP_PORT_BIND:-127.0.0.1}:${APP_PORT:-8090}:8080"
     volumes:
       - storage_public:/var/www/html/storage/app/public   # foto menu
       - storage_logs:/var/www/html/storage/logs
@@ -19,6 +22,14 @@ services:
   db:
     image: mysql:8.0
     restart: unless-stopped
+    mem_limit: 400m
+    # Pengaturan ringan untuk server yang RAM-nya sempit
+    command:
+      - --performance_schema=OFF
+      - --innodb-buffer-pool-size=96M
+      - --innodb-log-buffer-size=8M
+      - --max-connections=40
+      - --table-open-cache=200
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USERNAME}
@@ -26,11 +37,13 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
+    # Tidak ada "ports": database hanya bisa diakses dari container app
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_ROOT_PASSWORD}"]
       interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 30
+      start_period: 20s
 
 volumes:
   db_data:
