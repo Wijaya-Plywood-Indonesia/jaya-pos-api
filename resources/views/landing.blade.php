@@ -11,10 +11,11 @@
         .hero small { display: block; color: var(--muted); font-size: 13px; }
         h2.sec { font-size: clamp(22px, 4vw, 28px); text-align: center; margin: 56px 0 8px; letter-spacing: -.3px; }
         p.sec-sub { text-align: center; color: var(--muted); margin: 0 auto 24px; max-width: 540px; }
-        .shots { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 34px; }
-        .shots img { max-width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(0,0,0,.18); }
-        .shots img.tablet { width: 560px; }
-        .shots img.phone { width: 240px; }
+        .shots { display: flex; gap: 28px; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 38px; }
+        /* Gambar sudah berbingkai perangkat dan berlatar transparan: cukup bayangan lembut */
+        .shots img { max-width: 100%; height: auto; filter: drop-shadow(0 14px 26px rgba(17,24,39,.22)); }
+        .shots img.tablet { width: 640px; }
+        .shots img.phone { width: 220px; }
         /* Flex (bukan grid) supaya kartu sisa di baris terakhir berada di tengah */
         .feats { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
         .feat { flex: 0 1 calc(25% - 10.5px); min-width: 220px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
