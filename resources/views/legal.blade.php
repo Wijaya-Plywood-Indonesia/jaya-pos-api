@@ -8,7 +8,6 @@
         .doc h1 { margin: 0 0 6px; font-size: 26px; }
         .doc h2 { font-size: 16px; margin: 24px 0 6px; }
         .doc p, .doc li { font-size: 15px; }
-        .draft { background: rgba(217,119,6,.12); border: 1px solid rgba(217,119,6,.4); color: #b45309; padding: 10px 14px; border-radius: 11px; font-size: 13.5px; margin-bottom: 18px; }
     </style>
 @endsection
 
@@ -16,7 +15,6 @@
     @php($email = config('jaya.contact_email'))
 
     <div class="doc">
-        <div class="draft"><b>Draf.</b> Teks ini adalah kerangka awal, bukan nasihat hukum. Tinjau dan sesuaikan dengan layananmu (dan konsultasikan bila perlu) sebelum dipublikasikan.</div>
 
         @if ($type === 'syarat')
             <h1>Syarat layanan</h1>
