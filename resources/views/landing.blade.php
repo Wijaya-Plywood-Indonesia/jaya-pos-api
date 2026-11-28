@@ -15,8 +15,9 @@
         .shots img { max-width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(0,0,0,.18); }
         .shots img.tablet { width: 560px; }
         .shots img.phone { width: 240px; }
-        .feats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-        .feat { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
+        /* Flex (bukan grid) supaya kartu sisa di baris terakhir berada di tengah */
+        .feats { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+        .feat { flex: 0 1 calc(25% - 10.5px); min-width: 220px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
         .feat b { display: block; margin-bottom: 4px; }
         .feat span { color: var(--muted); font-size: 14px; }
         .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; counter-reset: s; }
