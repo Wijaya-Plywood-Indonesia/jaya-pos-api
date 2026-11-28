@@ -4,10 +4,15 @@
 @section('description', 'Mau ora? Pasti mau. Aplikasi kasir cafe: pesan, bayar, cetak struk, stok otomatis, dan laporan. Internet putus? Ora masalah.')
 
 @section('head')
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap" rel="stylesheet">
     <style>
         .hero { text-align: center; padding: 56px 0 28px; }
-        .eyebrow { display: inline-block; font-size: 14px; font-weight: 800; color: var(--red); background: rgba(215,38,61,.10); border: 1px solid rgba(215,38,61,.28); padding: 6px 16px; border-radius: 999px; margin-bottom: 18px; letter-spacing: .2px; }
-        .hero h1 { font-size: clamp(30px, 6vw, 46px); line-height: 1.15; margin: 0 0 14px; letter-spacing: -.5px; }
+        .slogan, .display { font-family: 'Gochi Hand', 'Comic Sans MS', 'Segoe Print', cursive; font-weight: 400; }
+        .slogan { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 16px; font-size: clamp(44px, 10vw, 76px); line-height: 1.05; margin: 0 0 24px; letter-spacing: .5px; }
+        .slogan .a { display: inline-block; background: var(--red); color: #fff; padding: 0 24px 8px; border-radius: 16px; transform: rotate(-3deg); box-shadow: 0 6px 0 var(--red-d); }
+        .hero h1 { font-size: clamp(24px, 4.6vw, 38px); line-height: 1.15; margin: 0 0 14px; letter-spacing: -.5px; }
         .hero p { color: var(--muted); font-size: 18px; max-width: 560px; margin: 0 auto 26px; }
         .hero .btn { margin: 0 6px 10px; }
         .hero small { display: block; color: var(--muted); font-size: 13px; }
@@ -56,7 +61,7 @@
     @endphp
 
     <section class="hero">
-        <div class="eyebrow">Mau ora? Pasti mau.</div>
+        <div class="slogan"><span class="q">Mau ora?</span><span class="a">Pasti mau.</span></div>
         <h1>Kasir cafe yang mudah dipakai,<br>jalan juga saat internet putus</h1>
         <p>Pesan, bayar, cetak struk, kelola stok, dan lihat laporan. Daftar gratis, coba jualan dalam hitungan menit.</p>
         <a class="btn primary" href="/daftar">Daftar gratis</a>
@@ -86,7 +91,7 @@
     <h2 class="sec">Semua yang dibutuhkan kasir cafe</h2>
     <p class="sec-sub">Dibuat untuk cafe dan kedai kecil sampai menengah.</p>
     <section class="feats">
-        <div class="feat"><b>Internet putus? Ora masalah.</b><span>Transaksi tersimpan di tablet dan terkirim otomatis saat online lagi.</span></div>
+        <div class="feat"><b class="display" style="font-size:24px;line-height:1.15;color:var(--red)">Internet putus? Ora masalah.</b><span>Transaksi tersimpan di tablet dan terkirim otomatis saat online lagi.</span></div>
         <div class="feat"><b>Stok dan resep otomatis</b><span>Bahan berkurang sendiri setiap ada penjualan, menu habis otomatis berlabel.</span></div>
         <div class="feat"><b>Diskon, promo, dan voucher</b><span>Diskon manual dengan persetujuan PIN owner.</span></div>
         <div class="feat"><b>Laporan dan Excel</b><span>Omset, laba kotor, menu terlaris, dan ekspor siap pakai.</span></div>
@@ -118,7 +123,7 @@
     </section>
 
     <section class="cta">
-        <h2>Jadi, mau ora?</h2>
+        <h2 class="display" style="font-size:clamp(34px,6vw,50px)">Jadi, mau ora?</h2>
         <p>Daftar sekarang dan coba transaksi pertamamu hari ini.</p>
         <a class="btn primary" href="/daftar">Daftar gratis</a>
         @if ($waUrl)<a class="btn wa" href="{{ $waUrl }}" target="_blank" rel="noopener">Tanya lewat WhatsApp</a>@endif
