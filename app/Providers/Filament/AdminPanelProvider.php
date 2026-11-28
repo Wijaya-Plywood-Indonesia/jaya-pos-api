@@ -27,10 +27,12 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName('Jaya POS')
+            ->brandName('Mawra POS')
+            ->favicon(asset('images/brand/favicon.png'))
+            ->darkMode(false)
             // Logo bulat + nama cafe, warna logo mengikuti "Warna tema" cafe
             ->brandLogo(fn () => view('filament.brand', [
-                'name' => auth()->user()?->cafe?->name ?? 'Jaya POS',
+                'name' => auth()->user()?->cafe?->name,
                 'color' => $this->safeColor(auth()->user()?->cafe?->theme_color),
             ]))
             ->brandLogoHeight('2.25rem')

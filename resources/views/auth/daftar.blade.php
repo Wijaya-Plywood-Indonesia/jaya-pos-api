@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'Daftar gratis · Jaya POS')
+@section('title', 'Daftar gratis · Mawra POS')
 
 @section('head')
     <style>

@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', ($type === 'syarat' ? 'Syarat layanan' : 'Kebijakan privasi') . ' · Jaya POS')
+@section('title', ($type === 'syarat' ? 'Syarat layanan' : 'Kebijakan privasi') . ' · Mawra POS')
 
 @section('head')
     <style>
@@ -9,7 +9,6 @@
         .doc h2 { font-size: 16px; margin: 24px 0 6px; }
         .doc p, .doc li { font-size: 15px; }
         .draft { background: rgba(217,119,6,.12); border: 1px solid rgba(217,119,6,.4); color: #b45309; padding: 10px 14px; border-radius: 11px; font-size: 13.5px; margin-bottom: 18px; }
-        @media (prefers-color-scheme: dark) { .draft { color: #fcd34d; } }
     </style>
 @endsection
 
@@ -21,10 +20,10 @@
 
         @if ($type === 'syarat')
             <h1>Syarat layanan</h1>
-            <p>Dengan mendaftar dan memakai Jaya POS, kamu setuju dengan syarat berikut.</p>
+            <p>Dengan mendaftar dan memakai Mawra POS, kamu setuju dengan syarat berikut.</p>
 
             <h2>1. Layanan</h2>
-            <p>Jaya POS adalah aplikasi kasir dan panel web untuk mencatat penjualan, stok, dan laporan cafe. Layanan saat ini diberikan gratis dan fitur atau batasannya dapat berubah. Perubahan besar diberitahukan lebih dulu.</p>
+            <p>Mawra POS adalah aplikasi kasir dan panel web untuk mencatat penjualan, stok, dan laporan cafe. Layanan saat ini diberikan gratis dan fitur atau batasannya dapat berubah. Perubahan besar diberitahukan lebih dulu.</p>
 
             <h2>2. Akun dan keamanan</h2>
             <p>Kamu bertanggung jawab atas kerahasiaan password dan PIN, serta atas semua tindakan yang dilakukan lewat akun cafe-mu, termasuk oleh karyawan yang kamu beri akses.</p>

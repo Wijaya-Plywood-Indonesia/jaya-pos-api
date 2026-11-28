@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'Jaya POS · Kasir cafe yang mudah')
+@section('title', 'Mawra POS · Kasir cafe yang mudah')
 
 @section('head')
     <style>
@@ -44,7 +44,7 @@
 @section('content')
     @php
         $wa = config('jaya.whatsapp');
-        $waUrl = $wa ? 'https://wa.me/'.preg_replace('/\D/', '', $wa).'?text='.rawurlencode('Halo, saya mau tanya tentang Jaya POS') : null;
+        $waUrl = $wa ? 'https://wa.me/'.preg_replace('/\D/', '', $wa).'?text='.rawurlencode('Halo, saya mau tanya tentang Mawra POS') : null;
         $shots = array_filter([
             'tablet' => file_exists(public_path('images/landing/kasir.png')) ? '/images/landing/kasir.png' : null,
             'phone'  => file_exists(public_path('images/landing/laporan.png')) ? '/images/landing/laporan.png' : null,
